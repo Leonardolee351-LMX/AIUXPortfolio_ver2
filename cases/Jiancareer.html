@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简职 JianCareer · 黎铭晞</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0a0a0f;
+  --bg-elevated: rgba(255,255,255,0.03);
+  --text: #e8e6e1;
+  --text-dim: #8a8580;
+  --text-muted: #5a5550;
+  --accent: #7c6fae;
+  --accent-soft: rgba(124,111,174,0.15);
+  --link: #00ff87;
+  --link-soft: rgba(0, 255, 135, 0.25);
+  --border: rgba(255,255,255,0.06);
+  --g-1: #1a0a2e;
+  --sidebar-bg: linear-gradient(to right, rgba(10,10,15,0.98), rgba(10,10,15,0.95));
+  --card-bg: rgba(255,255,255,0.02);
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ef;
+  --bg-elevated: rgba(0,0,0,0.03);
+  --text: #1a1a1a;
+  --text-dim: #5a5a5a;
+  --text-muted: #8a8a8a;
+  --accent: #5b4fa0;
+  --accent-soft: rgba(91,79,160,0.1);
+  --link: #0066cc;
+  --link-soft: rgba(0, 102, 204, 0.22);
+  --border: rgba(0,0,0,0.08);
+  --g-1: #e8e0f0;
+  --sidebar-bg: linear-gradient(to right, rgba(245,243,239,0.98), rgba(245,243,239,0.95));
+  --card-bg: rgba(0,0,0,0.03);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+/* ===== BACKGROUND ORBS ===== */
+.bg-orbs {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+  mix-blend-mode: screen;
+  animation: moveOrb 20s infinite alternate ease-in-out;
+}
+
+[data-theme="light"] .orb {
+  mix-blend-mode: multiply;
+  opacity: 0.08;
+}
+
+.orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #00f2fe 0%, transparent 70%);
+  top: -10%; left: -10%;
+  animation-duration: 25s;
+}
+
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #4facfe 0%, transparent 70%);
+  bottom: -5%; right: -5%;
+  animation-duration: 30s;
+  animation-delay: -5s;
+}
+
+.orb-3 {
+  width: 450px; height: 450px;
+  background: radial-gradient(circle, #00ff87 0%, transparent 70%);
+  top: 40%; left: 30%;
+  animation-duration: 22s;
+  animation-delay: -10s;
+}
+
+@keyframes moveOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(100px, 50px) scale(1.1); }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+
+/* ===== LAYOUT ===== */
+.page { display: flex; min-height: 100vh; }
+
+/* ===== LEFT SIDEBAR (TOC) ===== */
+.sidebar {
+  width: 260px;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 32px 24px;
+  overflow-y: auto;
+  z-index: 100;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.theme-toggle:hover {
+  background: var(--card-bg);
+  color: var(--text-dim);
+  border-color: var(--text-muted);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-toggle .sun { display: none; }
+.theme-toggle .moon { display: block; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 32px;
+  transition: color 0.3s;
+}
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 16px; height: 16px; }
+
+.toc-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.toc-list { list-style: none; }
+.toc-list li { margin-bottom: 4px; }
+.toc-list a {
+  display: block;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border-left: 2px solid transparent;
+}
+.toc-list a:hover { color: var(--text); background: var(--bg-elevated); }
+.toc-list a.active { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
+.toc-list a.sub { padding-left: 24px; font-size: 12px; }
+
+/* ===== MAIN CONTENT ===== */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  max-width: 900px;
+  padding: 48px 64px 120px;
+}
+
+/* ===== HERO BANNER ===== */
+.project-hero {
+  margin: -48px -64px 48px;
+  padding: 100px 64px 60px;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.project-hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,210,255,0.15), transparent 70%);
+  filter: blur(60px);
+}
+.project-hero h1 {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  position: relative;
+  color: #fff;
+}
+.project-hero .subtitle {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 1px;
+  position: relative;
+}
+
+/* ===== META BAR ===== */
+.meta-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.meta-group h4 {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.meta-group p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+.meta-group a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+/* ===== CONTENT BLOCKS ===== */
+.section-block { margin-bottom: 64px; }
+
+.section-block h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.section-block h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 32px 0 16px;
+  letter-spacing: 1px;
+}
+
+.section-block p {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.9;
+  margin-bottom: 16px;
+}
+
+.section-block p strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.section-block p a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--link-soft);
+  transition: border-color 0.3s;
+}
+.section-block p a:hover { border-bottom-color: var(--link); }
+
+.callout-content a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--link-soft);
+}
+.callout-content a:hover { border-bottom-color: var(--link); }
+
+/* ===== CALLOUT (Notion style) ===== */
+.callout {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; }
+.callout-content { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+
+/* ===== IMAGE BLOCKS ===== */
+.img-block {
+  margin: 32px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.img-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.img-block img {
+  width: 100%;
+  display: block;
+}
+.img-caption {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+}
+
+/* ===== BEFORE/AFTER COMPARISON ===== */
+.compare-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 32px 0;
+}
+.compare-item {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.compare-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.compare-item img { width: 100%; display: block; }
+.compare-label {
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.compare-label.before { background: rgba(255,255,255,0.03); color: var(--text-muted); }
+.compare-label.after { background: var(--accent-soft); color: var(--accent); }
+
+/* ===== VIDEO BLOCK ===== */
+.video-block {
+  margin: 32px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+  padding-bottom: 56.25%;
+  background: var(--bg-elevated);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.video-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.video-block iframe,
+.video-block video {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+.video-placeholder {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ===== QUOTE ===== */
+.quote-block {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  margin: 32px 0;
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* ===== TAG LIST ===== */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.tag-list span {
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 12px;
+  border-radius: 999px;
+  letter-spacing: 1px;
+}
+
+/* ===== RESULTS GRID ===== */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+.result-item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.result-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.result-number {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.result-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ===== FOOTER NAV ===== */
+.footer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 64px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+  gap: 24px;
+}
+
+.footer-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-btn .btn-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.footer-btn .btn-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Light Mode: Blue 系 */
+[data-theme="light"] .footer-btn {
+  background: #f0f7ff;
+  color: #0066cc;
+  border-color: #d0e7ff;
+}
+[data-theme="light"] .footer-btn:hover {
+  background: #0066cc;
+  color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 102, 204, 0.15);
+  border-color: transparent;
+}
+
+/* Dark Mode: Green 系 */
+[data-theme="dark"] .footer-btn {
+  background: rgba(0, 255, 135, 0.03);
+  color: #00ff87;
+  border-color: rgba(0, 255, 135, 0.1);
+}
+[data-theme="dark"] .footer-btn:hover {
+  background: rgba(0, 255, 135, 0.1);
+  color: #00ff87;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 255, 135, 0.1);
+  border-color: rgba(0, 255, 135, 0.3);
+}
+
+/* ===== PROJECT LINK CARDS ===== */
+.project-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 0 0 48px;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.link-card:hover {
+  transform: translateY(-4px);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.link-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.link-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.link-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Top Navigation Bar Theme Toggle */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-muted);
+}
+
+.nav-theme-toggle:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.nav-theme-toggle svg { width: 16px; height: 16px; }
+.nav-theme-toggle .sun { display: none; }
+.nav-theme-toggle .moon { display: block; }
+[data-theme="light"] .nav-theme-toggle .sun { display: block; }
+[data-theme="light"] .nav-theme-toggle .moon { display: none; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 24px; }
+  .project-hero { margin: -24px -24px 32px; padding: 60px 24px 32px; }
+  .project-hero h1 { font-size: 28px; }
+  .meta-bar { grid-template-columns: 1fr; gap: 16px; }
+  .compare-block { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.back-wrap{max-width:900px;margin:14px auto 0;padding:0 18px;}
+.back-work{display:inline-flex;align-items:center;gap:6px;font-size:13px;letter-spacing:.02em;color:var(--text-muted);text-decoration:none;transition:color .2s ease;}
+.back-work:hover{color:var(--text);}
+
+/* Top Navigation Bar */
+.unified-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+[data-theme="light"] .unified-topbar {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.unified-brand {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  text-decoration: none;
+}
+.unified-nav {
+  display: flex;
+  gap: 24px;
+}
+.unified-nav a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.unified-nav a:hover, .unified-nav a.active {
+  color: var(--text);
+}
+</style>
+<link rel="stylesheet" href="../site.css">
+<script src="../site.js" defer></script>
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Top Navigation -->
+<nav class="unified-topbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 200;">
+  <a href="../index.html" class="unified-brand" aria-label="LeonardoLi"><span class="brand-mark" aria-hidden="true"></span></a>
+  <div class="nav-actions">
+    <div class="unified-nav">
+      <a href="../index.html">Home</a>
+      <a href="../works.html" class="active">Work</a>
+      <a href="../art/index.html">Art</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../about.html">About</a>
+    </div>
+    <button class="nav-theme-toggle" id="navThemeToggle" type="button" data-theme-toggle aria-label="切换主题">
+      <svg class="moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+    </button>
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="mobileMenu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <div class="mobile-menu-section">
+    <a href="../index.html">Home</a>
+    <a href="../works.html">Work</a>
+    <a href="../art/index.html">Art</a>
+    <a href="../resume.html">Resume</a>
+    <a href="../about.html">About</a>
+  </div>
+  <div class="mobile-menu-section" data-mobile-toc></div>
+</div>
+
+<!-- Spacer for nav -->
+<div style="height: 64px;"></div>
+<div class="back-wrap"><a class="back-work" href="../works.html">&larr; Back to Work Page</a></div>
+
+<div class="page">
+
+<!-- SIDEBAR TOC -->
+<aside class="sidebar">
+  <a href="../works.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Index
+  </a>
+
+  <div class="toc-title">目录</div>
+  <ul class="toc-list">
+    <li><a href="#assets">补充工程资料</a></li>
+    <li><a href="#context" class="active">背景与问题</a></li>
+    <li><a href="#role">我的角色</a></li>
+    <li><a href="#process">设计过程</a></li>
+    <li><a href="#process-1" class="sub">阶段一：工作流梳理</a></li>
+    <li><a href="#process-2" class="sub">阶段二：设计规范与原型</a></li>
+    <li><a href="#process-3" class="sub">阶段三：AI Mentor</a></li>
+    <li><a href="#process-4" class="sub">阶段四：设计系统</a></li>
+    <li><a href="#outcome">最终产出</a></li>
+    <li><a href="#reflection">反思与收获</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- HERO -->
+<div class="project-hero">
+  <h1>简职 JianCareer</h1>
+  <div class="subtitle">AI Agent驱动的求职助手产品 · Case Study</div>
+</div>
+
+<!-- META BAR -->
+<div class="meta-bar">
+  <div class="meta-group">
+    <h4>Role</h4>
+    <p>体验设计师<br>前端开发（Vibe Coding）</p>
+  </div>
+  <div class="meta-group">
+    <h4>Credits</h4>
+    <p>产品经理 · 后端开发 · 2位设计实习生</p>
+  </div>
+  <div class="meta-group">
+    <h4>Time</h4>
+    <p>2025.08 – 2026.01<br><a href="https://jiancareer.com/">jiancareer.com</a></p>
+  </div>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="project-links">
+  <a href="https://jiancareer.com/" target="_blank" class="link-card">
+    <div class="link-icon">🌐</div>
+    <div class="link-info">
+      <span class="link-label">Preview</span>
+      <span class="link-name">访问官网</span>
+    </div>
+  </a>
+  <a href="https://jian-career.lovable.app/" target="_blank" class="link-card">
+    <div class="link-icon">⚡</div>
+    <div class="link-info">
+      <span class="link-label">Prototype</span>
+      <span class="link-name">Lovable 预览</span>
+    </div>
+  </a>
+  <a href="https://www.figma.com/design/PuEJoNAkxRowAizlmc5VtN/%E7%AE%80%E8%81%8C%E7%83%82%E5%B0%BE%E6%A5%BC?node-id=0-1&t=0TkLYv2ivkakbyUG-1" target="_blank" class="link-card">
+    <div class="link-icon">🎨</div>
+    <div class="link-info">
+      <span class="link-label">Figma</span>
+      <span class="link-name">设计工程文件</span>
+    </div>
+  </a>
+</div>
+
+<!-- KEY RESULTS (Moved from bottom) -->
+<section id="outcome-preview" class="section-block">
+  <h2>项目成果</h2>
+  <div class="results-grid">
+    <div class="result-item">
+      <div class="result-number">TOP 10%</div>
+      <div class="result-label">全平台 AI Agent 排名</div>
+    </div>
+    <div class="result-item">
+      <div class="result-number">NO. 1</div>
+      <div class="result-label">职业决策类细分榜单</div>
+    </div>
+    <div class="result-item">
+      <div class="result-number">2026</div>
+      <div class="result-label">带领实习生团队工程推进</div>
+    </div>
+  </div>
+</section>
+
+<section id="assets" class="section-block">
+  <h2>补充工程资料</h2>
+  <p>补充：简职后期组件库与网页工程文件（工作记录归档）。该链接可用于面试追问时展示后期工程推进痕迹与组件化沉淀。</p>
+  <div class="callout">
+    <div class="callout-icon">🧩</div>
+    <div class="callout-content">
+      <strong>Figma 工程文件</strong>：
+      <a href="https://www.figma.com/design/PuEJoNAkxRowAizlmc5VtN/%E7%AE%80%E8%81%8C%E7%83%82%E5%B0%BE%E6%A5%BC?node-id=0-1&t=0TkLYv2ivkakbyUG-1" target="_blank" rel="noopener noreferrer">简职工作记录（组件库 + 网页工程）</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT SECTIONS -->
+<section id="context" class="section-block">
+  <h2>背景与问题</h2>
+  <p>在当前竞争激烈的就业市场中，求职者面临着巨大的压力：简历重复填写、信息不对称、职业规划模糊。传统的求职平台往往只提供职位列表，缺乏个性化的指导。<strong>简职 JianCareer</strong> 的诞生，正是为了通过 AI Agent 架构解决这些核心痛点。</p>
+  
+  <div class="callout">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>核心挑战</strong>：如何将零散的求职信息整合为一键式的智能行动，并提供具有“专家级”温度的职业指导？
+    </div>
+  </div>
+
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/00JIAN-HERO.png" alt="简职项目概览">
+    <div class="img-caption">简职 JianCareer - AI Agent 驱动的职业决策与智能行动系统</div>
+  </div>
+</section>
+
+<section id="role" class="section-block">
+  <h2>我的角色</h2>
+  <p>作为<strong>体验设计师 (UX/UI)</strong> 与<strong>前端开发 (Vibe Coding)</strong>，我主导了从产品概念定义到高保真原型实现的全过程。同时，我也负责了组件库的搭建，并带领 2026 届设计实习生进行后期工程推进。</p>
+</section>
+
+<section id="process" class="section-block">
+  <h2>设计过程</h2>
+  <h3>01. 工作流梳理 (Workflows)</h3>
+  <p>利用 Miro 梳理了复杂的 AI 交互逻辑，明确了从“简历解析”到“模拟面试”再到“投递建议”的闭环路径。我们将产品定位为“AI Agent 驱动的求职助手”，用户只需填写一次信息即可多端复用。</p>
+  
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/Jian_01.png" alt="工作流梳理">
+    <div class="img-caption">基于 Miro 的复杂 AI 交互工作流梳理</div>
+  </div>
+
+  <p>在Miro的基础上，我从0搭建了<strong>设计规范体系</strong>，包括色彩系统、字体层级、组件规范等，确保后续40+页Figma原型的一致性。</p>
+
+  <!-- Phase 2 -->
+  <h3 id="process-2">阶段二：40+页Figma高保真原型</h3>
+  <p>基于梳理好的工作流，我独立完成了<strong>40+页Figma高保真原型</strong>，覆盖以下核心模块：</p>
+  <p>• <strong>官网</strong>（<a href="https://jian-career.lovable.app/">jian-career.lovable.app</a>）：产品价值传达、功能介绍<br>
+     • <strong>注册登录</strong>：手机号+验证码+微信授权多方式登录<br>
+     • <strong>个人信息填写</strong>：渐进式披露，降低填写门槛<br>
+     • <strong>浏览器插件端</strong>：一键填写网申表单的核心场景<br>
+     • <strong>Dashboard工作台</strong>：求职进度可视化、数据分析<br>
+     • <strong>求职分析</strong>：AI生成的求职报告<br>
+     • <strong>社区</strong>：求职者交流互动空间</p>
+
+  <div class="compare-block">
+    <div class="compare-item">
+      <img src="../img/projects/jiancareer/03JIAN-插件.png" alt="插件端界面">
+      <div class="compare-label before">浏览器插件端</div>
+    </div>
+    <div class="compare-item">
+      <img src="../img/projects/jiancareer/05-工作台.png" alt="Dashboard界面">
+      <div class="compare-label after">Dashboard工作台</div>
+    </div>
+  </div>
+
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/Jian_03.png" alt="Figma高保真原型展示">
+    <div class="img-caption">Figma 高保真原型展示 — 覆盖从网申到管理的完整求职周期</div>
+  </div>
+
+  <!-- Phase 3 -->
+  <h3 id="process-3">阶段三：AI Mentor — 从设计到代码</h3>
+  <p>AI Mentor（AI职业导师）是简职最具创新性的功能。通过<strong>对话式交互</strong>，AI Mentor帮助用户：</p>
+  <p>1. <strong>挖掘自身优势</strong>：通过引导式提问，帮助用户发现自己简历中的亮点<br>
+     2. <strong>分析职业匹配度</strong>：对比用户简历与目标JD的匹配程度<br>
+     3. <strong>推荐成长路径</strong>：基于用户背景推荐适合的职业发展方向</p>
+
+  <div class="callout">
+    <div class="callout-icon">⚡</div>
+    <div class="callout-content">
+      <strong>设计决策</strong>：为什么不直接用ChatGPT式的对话框？因为求职场景需要<strong>结构化的引导</strong>而非开放式对话。我采用了"渐进式披露"的交互模式——每次对话只聚焦一个维度（技能、经历、目标），降低用户的认知负担。
+    </div>
+  </div>
+
+  <p>我使用<strong>Lovable</strong>完成了AI Mentor界面的Vibe Coding开发——将Figma设计稿直接转化为可交互的前端原型。这种"设计即开发"的方式，让我可以在设计的同时验证交互可行性，大大缩短了设计-开发的迭代周期。</p>
+
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/Jian_05.png" alt="AI Mentor界面">
+    <div class="img-caption">AI Mentor对话界面 — 通过引导式对话帮助用户挖掘职业优势</div>
+  </div>
+
+  <h3>02. 组件化设计 (Design System)</h3>
+  <p>为了确保产品的长期迭代与团队协作效率，我建立了一套完整的 Figma 组件库。涵盖了从原子组件到复杂业务模块的全部规范，这极大地加速了后期实习生团队的工程化进度。</p>
+  
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/JianCareer_05.png" alt="组件库">
+    <div class="img-caption">Figma 组件库与设计规范沉淀</div>
+  </div>
+
+  <h3>03. AI Mentor 交互创新</h3>
+  <p>这是简职的核心竞争力。我们设计了一个能够通过对话感知用户优势、分析职业匹配度并提供即时反馈的 AI 导师。通过 Vibe Coding (Lovable) 技术，我们将这一概念快速转化为可运行的前端原型。</p>
+  
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/JianCareer_04.png" alt="AI Mentor 界面">
+    <div class="img-caption">AI Mentor 核心交互界面展示</div>
+  </div>
+</section>
+
+<section id="result" class="section-block">
+  <h2>最终产出与反馈</h2>
+  <p>简职在发布后获得了极高的行业关注度。在多个 AI Agent 榜单中位列前茅，并在职业教育类细分领域夺得 TOP 1。这不仅验证了产品逻辑的正确性，也证明了 AI 在垂直赛道上的巨大潜力。</p>
+  
+  <div class="img-block">
+    <img src="../img/projects/jiancareer/JianCareer_01.png" alt="最终产出">
+    <div class="img-caption">简职核心功能模块最终视觉呈现</div>
+  </div>
+
+  <div class="video-block">
+    <div class="video-placeholder">🎬 AI Mentor 交互演示视频（请替换为实际视频）</div>
+  </div>
+
+  <p>我负责了比赛的<strong>PPT动画和页面制作</strong>，将产品的设计理念、技术架构和商业价值以清晰有力的方式呈现给评委。</p>
+</section>
+
+<!-- RELATED FILES -->
+<section id="files" class="section-block">
+  <h2>相关文件</h2>
+  <p>以下 PDF 为简职项目完整技术报告，涵盖大模型多 Agent 架构、职业决策算法与系统实现细节，可直接在线预览或下载。</p>
+  <div style="margin-top:16px;">
+    <embed src="../files/B07 0662 简职：基于大模型多Agent架构的职业决策与智能行动系统_20260424193803.pdf" 
+           type="application/pdf" 
+           width="100%" 
+           height="600px" 
+           style="border:1px solid var(--border); border-radius:8px;" />
+  </div>
+  <p style="margin-top:8px; font-size:12px; color:var(--text-muted);">
+    若浏览器无法预览，可<a href="../files/B07 0662 简职：基于大模型多Agent架构的职业决策与智能行动系统_20260424193803.pdf" download="简职_技术报告.pdf">点此下载</a>。
+  </p>
+</section>
+
+<!-- VISUAL ARCHIVE -->
+<section id="archive" class="section-block">
+  <h2>视觉资产存档</h2>
+  <p>以下为项目全周期的视觉资产与界面存档，涵盖从早期概念到最终落地的所有核心模块。</p>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px; margin-top:24px;">
+    <img src="../img/projects/jiancareer/01JIAN-REGISTER.png" alt="注册界面" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/02JIAN-info.png" alt="信息填写" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/04JIAN-投递进度.png" alt="投递进度1" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/04JIAN-投递进度2.png" alt="投递进度2" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_01.png" alt="详情1" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_02.png" alt="详情2" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_03.png" alt="详情3" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_04.png" alt="详情4" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_05.png" alt="详情5" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_06.png" alt="详情6" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/JianCareer_07.png" alt="详情7" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/Jian_01.png" alt="流程1" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/Jian_04.png" alt="流程4" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/Jian_06.png" alt="流程6" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/Jian_07.png" alt="流程7" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/Jian_08.png" alt="流程8" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/J1.png" alt="作品1" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/J2.png" alt="作品2" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/J3.png" alt="作品3" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/J4.png" alt="作品4" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <img src="../img/projects/jiancareer/登录前.png" alt="登录前" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+  </div>
+</section>
+
+<!-- REFLECTION -->
+<section id="reflection" class="section-block">
+  <h2>反思与收获</h2>
+
+  <p><strong>关于"设计即开发"</strong>：通过Lovable/TRAE进行Vibe Coding，让我深刻理解了设计师掌握前端能力的价值。不再是"设计稿丢给开发"的线性流程，而是设计-开发一体化的敏捷迭代。这不仅是效率的提升，更是设计思维的延伸。</p>
+
+  <p><strong>关于AI产品的设计</strong>：AI Mentor的设计让我意识到，AI对话产品的核心挑战不是技术实现，而是<strong>如何让AI的回应既有用又有温度</strong>。过于结构化的引导会显得机械，过于开放又会让用户迷茫。找到这个平衡点，是AI交互设计的关键。</p>
+
+  <p><strong>如果再做一次</strong>：我希望能在更早的阶段引入<strong>用户测试</strong>。虽然项目节奏很快（创业团队的常态），但如果在AI Mentor的设计阶段能邀请3-5位应届生进行可用性测试，可能会在对话流程和交互细节上做出更精准的优化。</p>
+
+  <div class="callout">
+    <div class="callout-icon">🎯</div>
+    <div class="callout-content">
+      <strong>核心 takeaway</strong>：AI时代的设计师，需要同时具备<strong>产品思维</strong>（理解业务和用户）、<strong>设计能力</strong>（创造优秀的体验）和<strong>技术实现能力</strong>（用AI工具快速验证想法）。简职项目是我在这三个维度上一次完整的实践。
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER NAV -->
+<div class="footer-nav">
+  <a href="Anxious-Kit.html" class="footer-btn">
+    <span class="btn-label">Next Project</span>
+    <span class="btn-title">Anxious Kit 焦虑包 →</span>
+  </a>
+  <a href="../works.html" class="footer-btn">
+    <span class="btn-label">Back to</span>
+    <span class="btn-title">Works Index</span>
+  </a>
+</div>
+
+</main>
+</div>
+
+<script>
+// TOC Active State on Scroll
+const sections = document.querySelectorAll('section[id], h3[id]');
+const tocLinks = document.querySelectorAll('.toc-list a');
+
+function updateActiveToc() {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.getBoundingClientRect().top;
+    if (top < 200) current = section.id;
+  });
+  tocLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateActiveToc);
+
+// Scroll Animation (Intersection Observer)
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.img-block, .compare-item, .video-block, .result-item').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
